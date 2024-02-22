@@ -1,4 +1,14 @@
 import React, { useState } from "react";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 const RegistrationForm = () => {
   const [formData, setFormData] = useState({
@@ -19,17 +29,17 @@ const RegistrationForm = () => {
   };
 
   return (
-    <div className="bg-white p-8 rounded-xl shadow-md max-w-md mx-auto mt-20">
+    <div className="bg-white p-8 rounded-xl shadow-md w-1/3 mt-20">
       {/* <h2 className="text-xl font-semibold mb-4">Registration Form</h2> */}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label
+          <Label
             htmlFor="name"
             className="block font-semibold mb-2 text-zinc-900"
           >
             NAME:
-          </label>
-          <input
+          </Label>
+          <Input
             type="text"
             id="name"
             name="name"
@@ -40,13 +50,13 @@ const RegistrationForm = () => {
           />
         </div>
         <div className="mb-4">
-          <label
+          <Label
             htmlFor="phoneNumber"
             className="block mb-2 font-semibold text-zinc-900"
           >
             PHONE NUMBER:
-          </label>
-          <input
+          </Label>
+          <Input
             type="text"
             id="phoneNumber"
             name="phoneNumber"
@@ -57,32 +67,33 @@ const RegistrationForm = () => {
           />
         </div>
         <div className="mb-4">
-          <label
+          <Label
             htmlFor="occupation"
             className="block mb-2 font-semibold text-zinc-900"
           >
-            WHAT ARE YOU ?
-          </label>
-          <select
-            id="occupation"
-            name="occupation"
-            value={formData.occupation}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded"
-            required
-          >
-            <option value="">Select One</option>
-            <option value="student">Student</option>
-            <option value="professional">Working Professional</option>
-          </select>
+            Are you:
+          </Label>
+          <Select>
+            <SelectTrigger className="rounded-md text-black">
+              <SelectValue placeholder="Select one" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem className="bg-white" value="iti">
+                ITI Student
+              </SelectItem>
+              <SelectItem value="diploma">Diploma Student</SelectItem>
+              <SelectItem value="btech">B.Tech / B.E. Student</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div className="flex justify-center">
-          <button
+          <Button
             type="submit"
-            className="bg-[#f8c35c] text-white font-bold px-4 py-2 rounded hover:bg-yellow-600 transition duration-300 mt-2"
+            variant="outline"
+            className="bg-blue-500 font-bold px-4 py-2 rounded transition duration-300 mt-2"
           >
             REGISTER
-          </button>
+          </Button>
         </div>
       </form>
     </div>
