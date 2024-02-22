@@ -9,27 +9,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { toast } from "./ui/use-toast";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const RegistrationForm = () => {
   const [formData, setFormData] = useState({
     name: "",
-    phoneNumber: "",
-    occupation: "",
+    contact: "",
+    type: "",
   });
-
+  const router = useRouter();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission, e.g., send data to server
-    console.log(formData);
+    const res = await axios.post("/api/users", formData);
+    console.log(res);
+    if (res.status === 200) {
+      toast({ title: "All the best for your quiz!" });
+      router.push("/quiz");
+    } else toast({ title: res.data, variant: "destructive" });
   };
 
   return (
-    <div className="bg-white p-8 rounded-xl shadow-md w-1/3 mt-20">
+    <div className="bg-white p-8 rounded-xl shadow-md w-1/3">
       {/* <h2 className="text-xl font-semibold mb-4">Registration Form</h2> */}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -51,16 +58,16 @@ const RegistrationForm = () => {
         </div>
         <div className="mb-4">
           <Label
-            htmlFor="phoneNumber"
+            htmlFor="contact"
             className="block mb-2 font-semibold text-zinc-900"
           >
             PHONE NUMBER:
           </Label>
           <Input
             type="text"
-            id="phoneNumber"
-            name="phoneNumber"
-            value={formData.phoneNumber}
+            id="contact"
+            name="contact"
+            value={formData.contact}
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded"
             required
@@ -73,7 +80,12 @@ const RegistrationForm = () => {
           >
             Are you:
           </Label>
-          <Select>
+          <Select
+            required
+            onValueChange={(value) =>
+              setFormData((prev) => ({ ...prev, type: value }))
+            }
+          >
             <SelectTrigger className="rounded-md text-black">
               <SelectValue placeholder="Select one" />
             </SelectTrigger>
@@ -90,9 +102,9 @@ const RegistrationForm = () => {
           <Button
             type="submit"
             variant="outline"
-            className="bg-blue-500 font-bold px-4 py-2 rounded transition duration-300 mt-2"
+            className="bg-blue-500 font-bold px-4 py-2 rounded-lg transition duration-300 mt-2"
           >
-            REGISTER
+            Continue -&gt;
           </Button>
         </div>
       </form>
