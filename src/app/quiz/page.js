@@ -59,6 +59,8 @@ const Page = () => {
   const isFirstQuestion = currentQuestionIndex === 0;
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
+  console.log(currentQuestion?.answers);
+
   return (
     <div className="flex flex-col justify-center items-center gap-8">
        <Timer timeRemaining={timeRemaining} />
@@ -67,16 +69,11 @@ const Page = () => {
           <div>
             <h2 className="mb-4 text-xl font-bold">Question {currentQuestionIndex + 1} of {questions.length}:</h2>
             <h3 className="mb-4 text-lg font-semibold">{currentQuestion.question}</h3>
-            <div className="grid grid-cols-2 gap-4">
-              {currentQuestion.options &&
-                currentQuestion.options.map((option, index) => (
-                  <button
-                    key={index}
-                    className="px-4 py-2 rounded border border-gray-300 w-full cursor-pointer"
-                  >
-                    {option}
-                  </button>
-                ))}
+            <div>
+              {currentQuestion?.answers.map((answer)=>{
+                return <div>{answer}</div>
+              })
+              }
             </div>
             <div className="mt-6 flex justify-between">
               {!isFirstQuestion && (
