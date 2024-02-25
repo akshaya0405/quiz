@@ -6,6 +6,7 @@ import Timer from "../../components/Timer";
 const Page = () => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
   const [timeRemaining, setTimeRemaining] = useState(
     localStorage.getItem("timeRemaining")
       ? localStorage.getItem("timeRemaining")
@@ -19,6 +20,14 @@ const Page = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+  };
+
+  const onSubmit = async () => {
+    const res = await axios.post("http://localhost:3000/api/users/submit", {
+      questions,
+      contact: JSON.parse(localStorage.getItem("user")).contact,
+    });
+    console.log(res);
   };
 
   useEffect(() => {
@@ -60,21 +69,45 @@ const Page = () => {
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
   console.log(currentQuestion?.answers);
+  console.log(questions);
 
   return (
     <div className="flex flex-col justify-center items-center gap-8">
-       <Timer timeRemaining={timeRemaining} />
+      <Timer timeRemaining={timeRemaining} />
       <div className="w-96 p-8 rounded-lg shadow-md bg-white">
         {currentQuestion && (
           <div>
-            <h2 className="mb-4 text-xl font-bold">Question {currentQuestionIndex + 1} of {questions.length}:</h2>
-            <h3 className="mb-4 text-lg font-semibold">{currentQuestion.question}</h3>
-            <div>
-              {currentQuestion?.answers.map((answer)=>{
-                return <div>{answer}</div>
-              })
-              }
-            </div>
+            <h2 className="mb-4 text-xl font-bold">
+              Question {currentQuestionIndex + 1} of {questions.length}:
+            </h2>
+            <h3 className="mb-4 text-lg font-semibold">
+              {currentQuestion.question}
+            </h3>
+            <ul>
+              {currentQuestion?.answers.map((answer, index) => {
+                return (
+                  <li
+                    className={`rounded-lg  h-6 px-3 w-full pb-1 my-2 items-center ${
+                      answer == currentQuestion.markedAnswer
+                        ? "bg-blue-300"
+                        : "bg-zinc-100"
+                    }`}
+                    onClick={() =>
+                      setQuestions((prev) =>
+                        prev.map((q) => {
+                          console.log(q);
+                          if (q._id === currentQuestion._id)
+                            return { ...q, markedAnswer: answer };
+                          else return q;
+                        })
+                      )
+                    }
+                  >
+                    {answer}
+                  </li>
+                );
+              })}
+            </ul>
             <div className="mt-6 flex justify-between">
               {!isFirstQuestion && (
                 <button
@@ -86,7 +119,7 @@ const Page = () => {
               )}
               {isLastQuestion ? (
                 <button
-                  onClick={() => console.log("Submit")}
+                  onClick={() => onSubmit()}
                   className="px-4 py-2 rounded bg-yellow-500 text-white hover:bg-yellow-700 focus:outline-none"
                 >
                   Submit
@@ -94,7 +127,9 @@ const Page = () => {
               ) : (
                 <button
                   onClick={nextQuestion}
-                  className={`px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 focus:outline-none ${isFirstQuestion ? "ml-auto" : ""}`}
+                  className={`px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 focus:outline-none ${
+                    isFirstQuestion ? "ml-auto" : ""
+                  }`}
                 >
                   Next
                 </button>
@@ -103,7 +138,8 @@ const Page = () => {
           </div>
         )}
       </div>
-      </div>);
+    </div>
+  );
 };
 
 export default Page;
