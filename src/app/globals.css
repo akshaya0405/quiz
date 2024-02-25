@@ -7,10 +7,10 @@
 --secondary:#f8c35c;
 } */
 
-body {
+/* body {
   --primary: #04136b;
   background-color: var(--primary);
-}
+} */
 
 @layer base {
   :root {

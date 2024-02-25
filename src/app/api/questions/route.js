@@ -1,4 +1,4 @@
-import clientPromise from "@/utils/db";
+import clientPromise from "../../../utils/db";
 
 const client = await clientPromise;
 const db = client.db("quiz");
@@ -44,6 +44,7 @@ function generateMockData() {
 export const GET = async (req) => {
   try {
     let questions = await db.collection("questions").find({}).toArray();
+    console.log("entered")
     questions = shuffleAndReturnTop10(questions);
     // let questions = [];
     // for (let i = 0; i < 20; i++) questions.push(generateMockData());
