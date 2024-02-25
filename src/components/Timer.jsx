@@ -2,27 +2,12 @@ import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import { cn } from "../lib/utils";
 
-const Timer = () => {
-  const [timeRemaining, setTimeRemaining] = useState(120);
-
+const Timer = ({ timeRemaining }) => {
   const convertTime = (time) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
     return `${minutes}:${seconds < 10 ? `0${seconds}` : `${seconds}`}`;
   };
-  useEffect(() => {
-    if (localStorage.getItem("timeRemaining"))
-      setTimeRemaining(localStorage.getItem("timeRemaining"));
-    window.interval = setInterval(() => {
-      setTimeRemaining((prev) => prev - 1);
-    }, 1000);
-    return () => window.clearInterval(window.interval);
-  }, []);
-
-  useEffect(() => {
-    if (timeRemaining === 0) window.clearInterval(window.interval);
-    localStorage.setItem("timeRemaining", timeRemaining);
-  }, [timeRemaining]);
 
   return (
     <div>
