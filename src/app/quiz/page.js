@@ -34,7 +34,7 @@ const page = () => {
   }, []);
 
   useEffect(() => {
-    if (timeRemaining === 0) window.clearInterval(window.interval);
+    if (timeRemaining <= 0) window.clearInterval(window.interval);
     localStorage.setItem("timeRemaining", timeRemaining);
   }, [timeRemaining]);
   return (
