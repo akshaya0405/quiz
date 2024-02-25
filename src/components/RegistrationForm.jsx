@@ -50,6 +50,7 @@ const RegistrationForm = () => {
             type="text"
             id="name"
             name="name"
+            placeholder="Enter your name"
             value={formData.name}
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded"
@@ -67,6 +68,7 @@ const RegistrationForm = () => {
             type="text"
             id="contact"
             name="contact"
+            placeholder="Enter your phone number"
             value={formData.contact}
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded"
