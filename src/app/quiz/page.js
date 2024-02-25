@@ -60,7 +60,7 @@ const Page = () => {
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex flex-col justify-center items-center gap-8">
        <Timer timeRemaining={timeRemaining} />
       <div className="w-96 p-8 rounded-lg shadow-md bg-white">
         {currentQuestion && (
