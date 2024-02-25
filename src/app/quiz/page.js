@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Timer from "../../components/Timer";
 
 const page = () => {
   const [questions, setQuestions] = useState([]);
@@ -12,8 +13,11 @@ const page = () => {
   useEffect(() => {
     fetchData();
   }, []);
-  console.log(questions);
-  return <div>quiz page</div>;
+  return (
+    <div>
+      <Timer />
+    </div>
+  );
 };
 
 export default page;
