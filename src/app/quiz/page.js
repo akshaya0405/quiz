@@ -1,10 +1,16 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Timer from "../../components/Timer";
 
 const Page = () => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState(
+    localStorage.getItem("timeRemaining")
+      ? localStorage.getItem("timeRemaining")
+      : 120
+  );
 
   const fetchData = async () => {
     try {
@@ -18,6 +24,24 @@ const Page = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    // if (localStorage.getItem("timeRemaining"))
+    //   setTimeRemaining((prev) =>
+    //     localStorage.getItem("timeRemaining")
+    //       ? localStorage.getItem("timeRemaining")
+    //       : 120
+    //   );
+    window.interval = setInterval(() => {
+      setTimeRemaining((prev) => prev - 1);
+    }, 1000);
+    return () => window.clearInterval(window.interval);
+  }, []);
+
+  useEffect(() => {
+    if (timeRemaining <= 0) window.clearInterval(window.interval);
+    localStorage.setItem("timeRemaining", timeRemaining);
+  }, [timeRemaining]);
 
   const nextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
@@ -37,6 +61,7 @@ const Page = () => {
 
   return (
     <div className="flex justify-center items-center h-screen">
+       <Timer timeRemaining={timeRemaining} />
       <div className="w-96 p-8 rounded-lg shadow-md bg-white">
         {currentQuestion && (
           <div>
@@ -81,8 +106,7 @@ const Page = () => {
           </div>
         )}
       </div>
-    </div>
-  );
+      </div>);
 };
 
 export default Page;
