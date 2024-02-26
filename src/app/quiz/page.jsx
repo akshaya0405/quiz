@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Timer from "../../components/Timer";
+import Loading from "../../components/Loading";
 
 const Page = () => {
   const [questions, setQuestions] = useState([]);
@@ -23,15 +24,26 @@ const Page = () => {
   };
 
   const onSubmit = async () => {
-    const res = await axios.post("http://localhost:3000/api/users/submit", {
-      questions,
-      contact: JSON.parse(localStorage.getItem("user")).contact,
-    });
-    console.log(res);
+    try {
+      const res = await axios.post("http://localhost:3000/api/users/submit", {
+        questions,
+        contact: JSON.parse(localStorage.getItem("user")).contact,
+      });
+      console.log(res);
+      alert(`Your score is ${res.data.score}`);
+      localStorage.removeItem("timeRemaining");
+      localStorage.removeItem("questions");
+      localStorage.removeItem("user");
+    } catch (error) {}
   };
 
   useEffect(() => {
-    fetchData();
+    if (
+      localStorage.getItem("questions") &&
+      JSON.parse(localStorage.getItem("questions")) != 0
+    ) {
+      setQuestions(JSON.parse(localStorage.getItem("questions")));
+    } else fetchData();
   }, []);
 
   useEffect(() => {
@@ -48,9 +60,17 @@ const Page = () => {
   }, []);
 
   useEffect(() => {
-    if (timeRemaining <= 0) window.clearInterval(window.interval);
-    localStorage.setItem("timeRemaining", timeRemaining);
+    if (timeRemaining <= 0) {
+      window.clearInterval(window.interval);
+      onSubmit();
+      return;
+    } else localStorage.setItem("timeRemaining", timeRemaining);
   }, [timeRemaining]);
+
+  useEffect(() => {
+    if (questions.length > 0)
+      localStorage.setItem("questions", JSON.stringify(questions));
+  }, [questions]);
 
   const nextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
@@ -68,8 +88,10 @@ const Page = () => {
   const isFirstQuestion = currentQuestionIndex === 0;
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
-  console.log(currentQuestion?.answers);
-  console.log(questions);
+  // console.log(currentQuestion?.answers);
+  // console.log(questions);
+
+  if (questions.length === 0) return <Loading />;
 
   return (
     <div className="flex flex-col justify-center items-center gap-8">
