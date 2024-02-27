@@ -19,10 +19,10 @@ const Leaderboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const leaderboard = await axios.get(
+        const leaderboardResponse = await axios.get(
           "http://localhost:3000/api/leaderboard"
         );
-        setLeaderboard(leaderboard.data.users);
+        setLeaderboard(leaderboardResponse.data.users);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -43,7 +43,7 @@ const Leaderboard = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {leaderboard.map((user) => (
+          {leaderboard?.map((user) => (
             <TableRow key={user._id}>
               <TableCell className="border px-4 py-2 flex justify-between">
                 <h4>{user.name}</h4>

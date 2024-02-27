@@ -9,7 +9,8 @@ const Page = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   const [timeRemaining, setTimeRemaining] = useState(() => {
-    const storedTimeRemaining = localStorage.getItem("timeRemaining");
+    const storedTimeRemaining =
+      typeof window !== "undefined" && localStorage.getItem("timeRemaining");
     return storedTimeRemaining ? parseInt(storedTimeRemaining) : 120;
   });
 
@@ -26,22 +27,31 @@ const Page = () => {
     try {
       const res = await axios.post("http://localhost:3000/api/users/submit", {
         questions,
-        contact: JSON.parse(localStorage.getItem("user")).contact,
+        contact: JSON.parse(
+          typeof window !== "undefined" && localStorage.getItem("user")
+        ).contact,
       });
       console.log(res);
       alert(`Your score is ${res.data.score}`);
-      localStorage.removeItem("timeRemaining");
-      localStorage.removeItem("questions");
-      localStorage.removeItem("user");
+      typeof window !== "undefined" && localStorage.removeItem("timeRemaining");
+      typeof window !== "undefined" && localStorage.removeItem("questions");
+      typeof window !== "undefined" && localStorage.removeItem("user");
     } catch (error) {}
   };
 
   useEffect(() => {
     if (
+      typeof window !== "undefined" &&
       localStorage.getItem("questions") &&
-      JSON.parse(localStorage.getItem("questions")) != 0
+      JSON.parse(
+        typeof window !== "undefined" && localStorage.getItem("questions")
+      ) != 0
     ) {
-      setQuestions(JSON.parse(localStorage.getItem("questions")));
+      setQuestions(
+        JSON.parse(
+          typeof window !== "undefined" && localStorage.getItem("questions")
+        )
+      );
     } else fetchData();
   }, []);
 
@@ -63,12 +73,15 @@ const Page = () => {
       window.clearInterval(window.interval);
       onSubmit();
       return;
-    } else localStorage.setItem("timeRemaining", timeRemaining);
+    } else
+      typeof window !== "undefined" &&
+        localStorage.setItem("timeRemaining", timeRemaining);
   }, [timeRemaining]);
 
   useEffect(() => {
     if (questions.length > 0)
-      localStorage.setItem("questions", JSON.stringify(questions));
+      typeof window !== "undefined" &&
+        localStorage.setItem("questions", JSON.stringify(questions));
   }, [questions]);
 
   const nextQuestion = () => {
