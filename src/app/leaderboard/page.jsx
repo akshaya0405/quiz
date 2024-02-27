@@ -19,13 +19,8 @@ const Leaderboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-<<<<<<< HEAD
-        const leaderboard = await axios.get(
-          "suvidya-chemtech-quiz.vercel.app/api/leaderboard"
-=======
         const leaderboardResponse = await axios.get(
-          "http://localhost:3000/api/leaderboard"
->>>>>>> 1ebb55f38c4dc3a7af618c192f536368af109961
+          "https://suvidya-chemtech-quiz.vercel.app//api/leaderboard"
         );
         setLeaderboard(leaderboardResponse.data.users);
       } catch (error) {

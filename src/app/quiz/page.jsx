@@ -27,22 +27,15 @@ const Page = () => {
 
   const onSubmit = async () => {
     try {
-<<<<<<< HEAD
       const res = await axios.post(
-        "suvidya-chemtech-quiz.vercel.app/api/users/submit",
+        "https://suvidya-chemtech-quiz.vercel.app//api/users/submit",
         {
           questions,
-          contact: JSON.parse(localStorage.getItem("user")).contact,
+          contact: JSON.parse(
+            typeof window !== "undefined" && localStorage.getItem("user")
+          ).contact,
         }
       );
-=======
-      const res = await axios.post("http://localhost:3000/api/users/submit", {
-        questions,
-        contact: JSON.parse(
-          typeof window !== "undefined" && localStorage.getItem("user")
-        ).contact,
-      });
->>>>>>> 1ebb55f38c4dc3a7af618c192f536368af109961
       console.log(res);
       alert(`Your score is ${res.data.score}`);
       typeof window !== "undefined" && localStorage.removeItem("timeRemaining");
