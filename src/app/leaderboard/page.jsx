@@ -57,4 +57,4 @@ const Leaderboard = () => {
   );
 };
 
-export default leaderboard;
+export default Leaderboard; // Change 'leaderboard' to 'Leaderboard'
