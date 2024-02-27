@@ -28,7 +28,7 @@ const Page = () => {
   const onSubmit = async () => {
     try {
       const res = await axios.post(
-        "https://suvidya-chemtech-quiz.vercel.app//api/users/submit",
+        "https://suvidya-chemtech-quiz.vercel.app/api/users/submit",
         {
           questions,
           contact: JSON.parse(
