@@ -17,7 +17,7 @@ const Page = () => {
   const fetchData = async () => {
     try {
       const questions = await axios.get(
-        "suvidya-chemtech-quiz.vercel.app/api/questions"
+        "https://suvidya-chemtech-quiz.vercel.app/"
       );
       setQuestions(questions.data.questions);
     } catch (error) {
