@@ -15,8 +15,15 @@ const Page = () => {
   });
 
   const fetchData = async () => {
+    console.log("fetching data");
     try {
-      const questions = await axios.get("/api/questions");
+      let level;
+      if (typeof window !== "undefined") {
+        level =
+          JSON.parse(localStorage.getItem("user")).type === "btech" ? 2 : 1;
+      }
+      const questions = await axios.get(`/api/questions?level=${level}`);
+      console.log(questions);
       setQuestions(questions.data.questions);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -41,12 +48,11 @@ const Page = () => {
   };
 
   useEffect(() => {
+    console.log(localStorage.getItem("questions"));
     if (
       typeof window !== "undefined" &&
       localStorage.getItem("questions") &&
-      JSON.parse(
-        typeof window !== "undefined" && localStorage.getItem("questions")
-      ) != 0
+      JSON.parse(localStorage.getItem("questions")) != 0
     ) {
       setQuestions(
         JSON.parse(
@@ -80,7 +86,7 @@ const Page = () => {
   }, [timeRemaining]);
 
   useEffect(() => {
-    if (questions.length > 0)
+    if (questions?.length > 0)
       typeof window !== "undefined" &&
         localStorage.setItem("questions", JSON.stringify(questions));
   }, [questions]);
@@ -97,14 +103,14 @@ const Page = () => {
     }
   };
 
-  const currentQuestion = questions[currentQuestionIndex];
+  const currentQuestion = questions?.[currentQuestionIndex];
   const isFirstQuestion = currentQuestionIndex === 0;
-  const isLastQuestion = currentQuestionIndex === questions.length - 1;
+  const isLastQuestion = currentQuestionIndex === questions?.length - 1;
 
   // console.log(currentQuestion?.answers);
   // console.log(questions);
 
-  if (questions.length === 0) return <Loading />;
+  if (questions && questions.length === 0) return <Loading />;
 
   return (
     <div className="flex flex-col justify-center items-center gap-8">
@@ -127,6 +133,7 @@ const Page = () => {
             <h3 className="mb-4 text-lg font-semibold">
               {currentQuestion.question}
             </h3>
+            {/* <h4>{currentQuestion.level}</h4> */}
             <ul>
               {currentQuestion?.answers.map((answer, index) => {
                 return (
