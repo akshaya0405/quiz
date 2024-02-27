@@ -101,14 +101,14 @@ const Page = () => {
     }
   };
 
-  const currentQuestion = questions[currentQuestionIndex];
+  const currentQuestion = questions?.[currentQuestionIndex];
   const isFirstQuestion = currentQuestionIndex === 0;
-  const isLastQuestion = currentQuestionIndex === questions.length - 1;
+  const isLastQuestion = currentQuestionIndex === questions?.length - 1;
 
   // console.log(currentQuestion?.answers);
   // console.log(questions);
 
-  if (questions.length === 0) return <Loading />;
+  if (questions?.length === 0) return <Loading />;
 
   return (
     <div className="flex flex-col justify-center items-center gap-8">
