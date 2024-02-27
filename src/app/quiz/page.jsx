@@ -74,12 +74,21 @@ const Page = () => {
   return (
     <div className="flex flex-col justify-center items-center gap-8">
       <Timer timeRemaining={timeRemaining} />
-      <div className="w-96 p-8 rounded-lg shadow-md bg-white">
+      <div className="w-96 p-8 rounded-xl shadow-inner shadow-zinc-400	 bg-white">
         {currentQuestion && (
           <div>
-            <h2 className="mb-4 text-xl font-bold">
-              Question {currentQuestionIndex + 1} of {questions.length}:
-            </h2>
+            <div className="mb-4 flex gap-1">
+              <h3 className="font-bold px-1 pt-3 text-sm text-zinc-500">
+                {" "}
+                QUESTION
+              </h3>
+              <h6 className="text-2xl pt-0.5 font-bold text-zinc-700">
+                {currentQuestionIndex + 1}
+              </h6>
+              <p className="pt-2 text-zinc-500 font-bold">
+                /{questions.length}:
+              </p>
+            </div>
             <h3 className="mb-4 text-lg font-semibold">
               {currentQuestion.question}
             </h3>
@@ -87,10 +96,10 @@ const Page = () => {
               {currentQuestion?.answers.map((answer, index) => {
                 return (
                   <li
-                    className={`rounded-lg  h-6 px-3 w-full pb-1 my-2 items-center ${
+                    className={`rounded-lg  h-6 px-3 w-full pb-1 my-2 items-center shadow-sm transition ease-in-out hover:-translate-y-0.5 scale-100 ${
                       answer == currentQuestion.markedAnswer
-                        ? "bg-blue-300"
-                        : "bg-zinc-100"
+                        ? "bg-blue-200 border border-blue-500"
+                        : "bg-zinc-200 hover:bg-zinc-400 shadow duration-150"
                     }`}
                     onClick={() =>
                       setQuestions((prev) =>
@@ -112,7 +121,7 @@ const Page = () => {
               {!isFirstQuestion && (
                 <button
                   onClick={prevQuestion}
-                  className="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 focus:outline-none"
+                  className="px-4 py-2 rounded bg-blue-500 shadow-md shadow-gray-300 text-white hover:bg-blue-600 focus:outline-none"
                 >
                   Previous
                 </button>
@@ -120,14 +129,14 @@ const Page = () => {
               {isLastQuestion ? (
                 <button
                   onClick={() => onSubmit()}
-                  className="px-4 py-2 rounded bg-yellow-500 text-white hover:bg-yellow-700 focus:outline-none"
+                  className="px-4 py-2 rounded bg-yellow-500 shadow-md shadow-gray-300 text-white hover:bg-yellow-700 focus:outline-none"
                 >
                   Submit
                 </button>
               ) : (
                 <button
                   onClick={nextQuestion}
-                  className={`px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 focus:outline-none ${
+                  className={`px-4 py-2 rounded bg-blue-500 shadow-md shadow-gray-300 text-white hover:bg-blue-600 focus:outline-none ${
                     isFirstQuestion ? "ml-auto" : ""
                   }`}
                 >
