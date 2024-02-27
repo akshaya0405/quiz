@@ -8,11 +8,10 @@ const Page = () => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
-  const [timeRemaining, setTimeRemaining] = useState(
-    localStorage.getItem("timeRemaining")
-      ? localStorage.getItem("timeRemaining")
-      : 120
-  );
+  const [timeRemaining, setTimeRemaining] = useState(() => {
+    const storedTimeRemaining = localStorage.getItem("timeRemaining");
+    return storedTimeRemaining ? parseInt(storedTimeRemaining) : 120;
+  });
 
   const fetchData = async () => {
     try {
