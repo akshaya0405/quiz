@@ -20,7 +20,7 @@ const leaderboard = () => {
     const fetchData = async () => {
       try {
         const leaderboard = await axios.get(
-          "http://localhost:3000/api/leaderboard"
+          "suvidya-chemtech-quiz.vercel.app/api/leaderboard"
         );
         setLeaderboard(leaderboard.data.users);
       } catch (error) {
