@@ -117,6 +117,7 @@ const Page = () => {
               {currentQuestion?.answers.map((answer, index) => {
                 return (
                   <li
+                    key={index}
                     className={`rounded-lg  h-6 px-3 w-full pb-1 my-2 items-center shadow-sm transition ease-in-out hover:-translate-y-0.5 scale-100 ${
                       answer == currentQuestion.markedAnswer
                         ? "bg-blue-200 border border-blue-500"

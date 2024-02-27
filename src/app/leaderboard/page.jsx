@@ -14,7 +14,7 @@ import {
 
 import Loading from "../../components/Loading";
 
-const leaderboard = () => {
+const Leaderboard = () => {
   const [leaderboard, setLeaderboard] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
