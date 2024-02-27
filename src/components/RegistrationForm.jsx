@@ -31,7 +31,8 @@ const RegistrationForm = () => {
     console.log(res);
     if (res.status === 200) {
       toast({ title: "All the best for your quiz!" });
-      localStorage.setItem("user", JSON.stringify(formData));
+      typeof window !== "undefined" &&
+        localStorage.setItem("user", JSON.stringify(formData));
       router.push("/quiz");
     } else toast({ title: res.data, variant: "destructive" });
   };

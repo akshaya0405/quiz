@@ -14,15 +14,20 @@ import {
 
 import Loading from "../../components/Loading";
 
-const leaderboard = () => {
+const Leaderboard = () => {
   const [leaderboard, setLeaderboard] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
+<<<<<<< HEAD
         const leaderboard = await axios.get(
           "suvidya-chemtech-quiz.vercel.app/api/leaderboard"
+=======
+        const leaderboardResponse = await axios.get(
+          "http://localhost:3000/api/leaderboard"
+>>>>>>> 1ebb55f38c4dc3a7af618c192f536368af109961
         );
-        setLeaderboard(leaderboard.data.users);
+        setLeaderboard(leaderboardResponse.data.users);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -43,7 +48,7 @@ const leaderboard = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {leaderboard.map((user) => (
+          {leaderboard?.map((user) => (
             <TableRow key={user._id}>
               <TableCell className="border px-4 py-2 flex justify-between">
                 <h4>{user.name}</h4>
@@ -57,4 +62,4 @@ const leaderboard = () => {
   );
 };
 
-export default leaderboard;
+export default Leaderboard; // Change 'leaderboard' to 'Leaderboard'

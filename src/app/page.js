@@ -20,7 +20,7 @@ export default function Home() {
         </div>
         <div className="text-center">
           <h1 className="text-[#75c7fb] italic font-extrabold text-5xl">
-            SUVIDYA'S
+            SUVIDYA&apos;S
           </h1>
           <h1 className="text-red-500 italic font-extrabold text-5xl">
             CHEMTECH QUIZ

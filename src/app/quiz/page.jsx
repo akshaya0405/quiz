@@ -9,7 +9,8 @@ const Page = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   const [timeRemaining, setTimeRemaining] = useState(() => {
-    const storedTimeRemaining = localStorage.getItem("timeRemaining");
+    const storedTimeRemaining =
+      typeof window !== "undefined" && localStorage.getItem("timeRemaining");
     return storedTimeRemaining ? parseInt(storedTimeRemaining) : 120;
   });
 
@@ -26,6 +27,7 @@ const Page = () => {
 
   const onSubmit = async () => {
     try {
+<<<<<<< HEAD
       const res = await axios.post(
         "suvidya-chemtech-quiz.vercel.app/api/users/submit",
         {
@@ -33,20 +35,35 @@ const Page = () => {
           contact: JSON.parse(localStorage.getItem("user")).contact,
         }
       );
+=======
+      const res = await axios.post("http://localhost:3000/api/users/submit", {
+        questions,
+        contact: JSON.parse(
+          typeof window !== "undefined" && localStorage.getItem("user")
+        ).contact,
+      });
+>>>>>>> 1ebb55f38c4dc3a7af618c192f536368af109961
       console.log(res);
       alert(`Your score is ${res.data.score}`);
-      localStorage.removeItem("timeRemaining");
-      localStorage.removeItem("questions");
-      localStorage.removeItem("user");
+      typeof window !== "undefined" && localStorage.removeItem("timeRemaining");
+      typeof window !== "undefined" && localStorage.removeItem("questions");
+      typeof window !== "undefined" && localStorage.removeItem("user");
     } catch (error) {}
   };
 
   useEffect(() => {
     if (
+      typeof window !== "undefined" &&
       localStorage.getItem("questions") &&
-      JSON.parse(localStorage.getItem("questions")) != 0
+      JSON.parse(
+        typeof window !== "undefined" && localStorage.getItem("questions")
+      ) != 0
     ) {
-      setQuestions(JSON.parse(localStorage.getItem("questions")));
+      setQuestions(
+        JSON.parse(
+          typeof window !== "undefined" && localStorage.getItem("questions")
+        )
+      );
     } else fetchData();
   }, []);
 
@@ -68,12 +85,15 @@ const Page = () => {
       window.clearInterval(window.interval);
       onSubmit();
       return;
-    } else localStorage.setItem("timeRemaining", timeRemaining);
+    } else
+      typeof window !== "undefined" &&
+        localStorage.setItem("timeRemaining", timeRemaining);
   }, [timeRemaining]);
 
   useEffect(() => {
     if (questions.length > 0)
-      localStorage.setItem("questions", JSON.stringify(questions));
+      typeof window !== "undefined" &&
+        localStorage.setItem("questions", JSON.stringify(questions));
   }, [questions]);
 
   const nextQuestion = () => {
@@ -122,6 +142,7 @@ const Page = () => {
               {currentQuestion?.answers.map((answer, index) => {
                 return (
                   <li
+                    key={index}
                     className={`rounded-lg  h-6 px-3 w-full pb-1 my-2 items-center shadow-sm transition ease-in-out hover:-translate-y-0.5 scale-100 ${
                       answer == currentQuestion.markedAnswer
                         ? "bg-blue-200 border border-blue-500"
