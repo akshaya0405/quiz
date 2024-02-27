@@ -12,7 +12,7 @@ import {
   TableCaption,
 } from "../../components/ui/table";
 
-import Loading from "../../components/loading";
+import Loading from "../../components/Loading";
 
 const leaderboard = () => {
   const [leaderboard, setLeaderboard] = useState([]);
