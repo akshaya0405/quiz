@@ -16,9 +16,7 @@ const Page = () => {
 
   const fetchData = async () => {
     try {
-      const questions = await axios.get(
-        "https://suvidya-chemtech-quiz.vercel.app/api/questions"
-      );
+      const questions = await axios.get("/api/questions");
       setQuestions(questions.data.questions);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -27,15 +25,13 @@ const Page = () => {
 
   const onSubmit = async () => {
     try {
-      const res = await axios.post(
-        "https://suvidya-chemtech-quiz.vercel.app/api/users/submit",
-        {
-          questions,
-          contact: JSON.parse(
-            typeof window !== "undefined" && localStorage.getItem("user")
-          ).contact,
-        }
-      );
+      window.clearInterval(window.interval);
+      const res = await axios.post("/api/users/submit", {
+        questions,
+        contact: JSON.parse(
+          typeof window !== "undefined" && localStorage.getItem("user")
+        ).contact,
+      });
       console.log(res);
       alert(`Your score is ${res.data.score}`);
       typeof window !== "undefined" && localStorage.removeItem("timeRemaining");
