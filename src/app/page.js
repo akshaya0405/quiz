@@ -3,6 +3,7 @@
 import Image from "next/image";
 import RegistrationForm from "../components/RegistrationForm";
 import { toast } from "../components/ui/use-toast";
+
 // import StarsCanvas from "../components/Stars";
 
 export default function Home() {
@@ -34,7 +35,9 @@ export default function Home() {
         </div>
       </div>
       {/* <StarsCanvas /> */}
+
       <RegistrationForm />
+     
     </div>
   );
 }
