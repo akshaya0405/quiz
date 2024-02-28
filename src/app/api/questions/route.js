@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "../../../utils/db";
 
 const client = await clientPromise;
@@ -24,8 +24,8 @@ export const GET = async (req) => {
       .find({ level: level })
       .toArray();
     questions = shuffleAndReturnTop10(questions);
-    return Response.json({ questions });
+    return NextResponse.json({ questions });
   } catch (error) {
-    return Response.json({ error });
+    return NextResponse.json({ error });
   }
 };
