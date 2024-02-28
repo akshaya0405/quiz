@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import { cn } from "../lib/utils";
+import { Hourglass } from "react-loader-spinner";
 
 const Timer = ({ timeRemaining }) => {
   const convertTime = (time) => {
@@ -10,16 +10,28 @@ const Timer = ({ timeRemaining }) => {
   };
 
   return (
-    <div>
+    <div className="flex items-center">
       <Button
-        className={cn("w-24 font-semibold text-lg", {
-          "bg-red-500 hover:bg-red-400 border-red-500 hover:border-red-400":
-            timeRemaining < 20,
-          "hover:bg-gray-200": timeRemaining > 20,
-        })}
+        className={cn(
+          "w-24 font-semibold text-lg flex gap-2 justify-center items-center",
+          {
+            "bg-red-500 hover:bg-red-400 border-red-500 hover:border-red-400":
+              timeRemaining < 20,
+            "hover:bg-gray-200": timeRemaining > 20,
+          }
+        )}
         variant="outline"
       >
-        {convertTime(timeRemaining)}
+        <div className="">
+          <Hourglass
+            visible={true}
+            height="100"
+            width="80"
+            ariaLabel="hourglass-loading"
+            colors={["#000", "#000"]}
+          />
+        </div>
+        <p className="w-11">{convertTime(timeRemaining)}</p>
       </Button>
       {/* <Button onClick={() => localStorage.removeItem("timeRemaining")}>
         clear
