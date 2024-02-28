@@ -169,11 +169,11 @@ const Page = () => {
   if (questions && questions.length === 0) return <Loading />;
 
   return (
-    <div className="flex flex-col justify-center items-center gap-8">
+    <div className="flex flex-col items-center h-full gap-8 ">
       {quizStarted && score === null && (
         <>
           <Timer timeRemaining={timeRemaining} />
-          <div className="w-96 p-8 rounded-xl shadow-inner shadow-zinc-400	 bg-white">
+          <div className="w-1/2 h-4/5 p-8 rounded-xl shadow-inner shadow-zinc-400 bg-white">
             {currentQuestion && (
               <div>
                 <div className="mb-4 flex gap-1">
@@ -197,7 +197,7 @@ const Page = () => {
                     return (
                       <li
                         key={index}
-                        className={`rounded-lg  h-6 px-3 w-full pb-1 my-2 items-center shadow-sm transition ease-in-out hover:-translate-y-0.5 scale-100 ${
+                        className={`cursor-pointer rounded-lg h-12 gap-2 flex px-3 w-full pb-1 my-2 items-center shadow-sm transition ease-in-out hover:-translate-y-0.5 scale-100 ${
                           answer == currentQuestion.markedAnswer
                             ? "bg-blue-200 border border-blue-500"
                             : "bg-zinc-200 hover:bg-zinc-400 shadow duration-150"
@@ -213,39 +213,53 @@ const Page = () => {
                           )
                         }
                       >
-                        {answer}
+                        <div
+                          className={`font-semibold border-2 p-1 w-6 h-6 rounded-md flex justify-center items-center ${
+                            answer == currentQuestion.markedAnswer
+                              ? "bg-blue-500/80 border-blue-500"
+                              : "bg-zinc-100 border-zinc-300"
+                          }`}
+                        >
+                          {"ABCD"[index]}
+                        </div>
+                        <p className="text-gray-800 font-bold text-md">
+                          {answer}
+                        </p>
                       </li>
                     );
                   })}
                 </ul>
-                <div className="mt-6 flex justify-between">
-                  {!isFirstQuestion && (
-                    <button
-                      onClick={prevQuestion}
-                      className="px-4 py-2 rounded bg-blue-500 shadow-md shadow-gray-300 text-white hover:bg-blue-600 focus:outline-none"
-                    >
-                      Previous
-                    </button>
-                  )}
-                  {isLastQuestion ? (
-                    <button
-                      onClick={() => onSubmit()}
-                      className="px-4 py-2 rounded bg-yellow-500 shadow-md shadow-gray-300 text-white hover:bg-yellow-700 focus:outline-none"
-                    >
-                      Submit
-                    </button>
-                  ) : (
-                    <button
-                      onClick={nextQuestion}
-                      className={`px-4 py-2 rounded bg-blue-500 shadow-md shadow-gray-300 text-white hover:bg-blue-600 focus:outline-none ${
-                        isFirstQuestion ? "ml-auto" : ""
-                      }`}
-                    >
-                      Next
-                    </button>
-                  )}
-                </div>
+                {/* <div className="mt-6 flex justify-between">
+                  
+                </div> */}
               </div>
+            )}
+          </div>
+          <div className="w-full flex justify-between ">
+            {!isFirstQuestion && (
+              <Button
+                onClick={prevQuestion}
+                className="px-4 py-2 rounded bg-blue-500 shadow-md text-white hover:bg-blue-600 focus:outline-none"
+              >
+                &lt;- Previous
+              </Button>
+            )}
+            {isLastQuestion ? (
+              <Button
+                onClick={() => onSubmit()}
+                className="px-4 py-2 rounded bg-yellow-600 shadow-md text-white hover:bg-yellow-500 focus:outline-none"
+              >
+                Submit
+              </Button>
+            ) : (
+              <Button
+                onClick={nextQuestion}
+                className={`px-4 py-2 rounded bg-blue-500 shadow-md text-white hover:bg-blue-600 focus:outline-none ${
+                  isFirstQuestion ? "ml-auto" : ""
+                }`}
+              >
+                Next -&gt;
+              </Button>
             )}
           </div>
         </>
