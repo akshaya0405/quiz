@@ -8,6 +8,7 @@ import { toast } from "../../components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
+import Image from "next/image";
 
 const Page = () => {
   const [questions, setQuestions] = useState([]);
@@ -126,28 +127,37 @@ const Page = () => {
 
   if (!quizStarted && score === null)
     return (
-      <div className="flex justify-center items-center h-full">
-        <div className="bg-gray-100/90  w-96 text-center rounded-xl shadow-inner shadow-zinc-400 p-8">
-          <h1 className="text-gray-900/90 font-bold text-2xl">Instructions</h1>
+      <div className="flex flex-col justify-start gap-5 items-center h-full">
+        <div className="relative bg-white w-[150px] h-[70px] rounded-3xl flex items-center justify-center pb-1 pl-1">
+          <Image
+            src="/logo.png"
+            width="300"
+            height="300"
+            alt="logo"
+            // className="border"
+          />
+        </div>
+        <div className="bg-gray-100/90  w-1/2 text-center rounded-xl shadow-inner shadow-zinc-400 p-8">
+          <h1 className="text-gray-900/90 font-bold text-3xl">Instructions</h1>
 
-          <ul className="text-left mt-4">
+          <ul className="text-left mt-4 text-lg">
             <li className="mb-2">
-              <span className="font-bold">1. </span>There are 10 questions in
-              total.
+              <span className="font-bold">1. </span>There are 10 questions, 1
+              marks each.
             </li>
             <li className="mb-2">
-              <span className="font-bold">2. </span>Each question has 4 options.
+              <span className="font-bold">2. </span>The questions are MCQs.
             </li>
             <li className="mb-2">
-              <span className="font-bold">3. </span>Each question carries 1
-              mark.
+              <span className="font-bold">3. </span>No negative markings.
             </li>
             <li className="mb-2">
-              <span className="font-bold">4. </span>There is no negative
-              marking.
+              <span className="font-bold">4. </span>You will get 2 minutes to
+              answer all questions. Quiz will be auto-submitted after it.
             </li>
             <li className="mb-2">
-              <span className="font-bold">5. </span>Time alloted is 2 minutes.
+              <span className="font-bold">5. </span>You will get a Prize for a
+              score of 8/10 and above.
             </li>
           </ul>
 
@@ -172,7 +182,18 @@ const Page = () => {
     <div className="flex flex-col items-center h-full gap-8 ">
       {quizStarted && score === null && (
         <>
-          <Timer timeRemaining={timeRemaining} />
+          <div className="flex justify-center items-center flex-row-reverse gap-4">
+            <Timer timeRemaining={timeRemaining} />
+            <div className="relative bg-white w-[150px] h-[70px] rounded-3xl flex items-center justify-center pb-1 pl-1">
+              <Image
+                src="/logo.png"
+                width="300"
+                height="300"
+                alt="logo"
+                // className="border"
+              />
+            </div>
+          </div>
           <div className="w-1/2 h-4/5 p-8 rounded-xl shadow-inner shadow-zinc-400 bg-white">
             {currentQuestion && (
               <div>

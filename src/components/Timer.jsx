@@ -13,7 +13,7 @@ const Timer = ({ timeRemaining }) => {
     <div className="flex items-center">
       <Button
         className={cn(
-          "w-28 font-semibold text-lg flex gap-2 justify-center items-center",
+          "w-28 h-[50px] font-semibold text-lg flex gap-2 justify-center items-center",
           {
             "bg-red-500 hover:bg-red-400 border-red-500 hover:border-red-400":
               timeRemaining < 20,
