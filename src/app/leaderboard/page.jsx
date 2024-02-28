@@ -59,7 +59,7 @@ const Leaderboard = () => {
         width="250"
         height="70"
       />
-      <Table className="bg-white rounded-lg !overflow-hidden w-[1200px] mx-auto">
+      <Table className="bg-white rounded-lg !overflow-hidden w-[1200px] mx-auto caption-top">
         <TableHeader>
           <TableRow className=" border-b-2  border-blue-600">
             <TableHead className="text-center text-blue-700 font-extrabold text-xl">

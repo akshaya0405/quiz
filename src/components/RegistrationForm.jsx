@@ -30,8 +30,20 @@ const RegistrationForm = () => {
     typeof window !== "undefined" && localStorage.removeItem("user");
     typeof window !== "undefined" && localStorage.removeItem("questions");
     typeof window !== "undefined" && localStorage.removeItem("timeRemaining");
+
+    if (
+      formData.contact.length !== 10 ||
+      isNaN(parseInt(formData.contact)) ||
+      !/^\d+$/.test(formData.contact)
+    ) {
+      toast({
+        title: "Please enter a valid phone number",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const res = await axios.post("/api/users", formData);
-    console.log(res);
     if (res.status === 200) {
       // toast({ title: "All the best for your quiz!" });
       typeof window !== "undefined" &&
@@ -70,7 +82,7 @@ const RegistrationForm = () => {
             PHONE NUMBER:
           </Label>
           <Input
-            type="text"
+            type="tel"
             id="contact"
             name="contact"
             placeholder="Enter your phone number"
