@@ -15,6 +15,12 @@ import {
 
 import Loading from "../../components/Loading";
 
+const convertTime = (time) => {
+  const minutes = Math.floor(time / 60);
+  const seconds = time % 60;
+  return `${minutes} : ${seconds < 10 ? `0${seconds}` : `${seconds}`}`;
+};
+
 const Leaderboard = () => {
   const [leaderboard, setLeaderboard] = useState([]);
   useEffect(() => {
@@ -77,12 +83,14 @@ const Leaderboard = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {leaderboard?.map((user) => (
+          {leaderboard?.map((user, index) => (
             <TableRow key={user._id} className="border-blue-300">
-              <TableCell className="text-center">1</TableCell>
+              <TableCell className="text-center">{index + 1}</TableCell>
               <TableCell className="text-center">{user.name}</TableCell>
               <TableCell className="text-center">{user.score}</TableCell>
-              <TableCell className="text-center">1:01</TableCell>
+              <TableCell className="text-center">
+                {convertTime(user.submitTime)}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -92,10 +100,3 @@ const Leaderboard = () => {
 };
 
 export default Leaderboard; // Change 'leaderboard' to 'Leaderboard'
-
-<TableRow>
-  <TableCell className="border px-4 py-2 flex justify-between">
-    <h4></h4>
-    <h5></h5>
-  </TableCell>
-</TableRow>;
