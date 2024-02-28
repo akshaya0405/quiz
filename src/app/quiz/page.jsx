@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
 import Image from "next/image";
+import { cn } from "../../lib/utils";
 
 const Page = () => {
   const [questions, setQuestions] = useState([]);
@@ -163,7 +164,12 @@ const Page = () => {
 
           <Button
             onClick={() => {
-              toast({ title: "All the best for your quiz!" });
+              toast({
+                className: cn(
+                  "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
+                ),
+                title: "All the best for your quiz!",
+              });
 
               setQuizStarted(true);
             }}
