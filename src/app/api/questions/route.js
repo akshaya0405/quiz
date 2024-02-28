@@ -17,13 +17,15 @@ function shuffleAndReturnTop10(array) {
 export const GET = async (req) => {
   try {
     const query = req.nextUrl.searchParams;
+    let level = query.get("level");
+    level = parseInt(level);
     let questions = await db
       .collection("questions")
-      .find({ level: parseInt(query.get("level")) })
+      .find({ level: level })
       .toArray();
     questions = shuffleAndReturnTop10(questions);
     return Response.json({ questions });
   } catch (error) {
-    return Response.json({ error: "Server Error" });
+    return Response.json({ error });
   }
 };

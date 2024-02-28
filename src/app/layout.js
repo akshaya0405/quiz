@@ -3,7 +3,7 @@ import "./globals.css";
 import { Toaster } from "../components/ui/toaster";
 import axios from "axios";
 // axios.baseURL = "https://suvidya-chemtech-quiz.vercel.app";
-axios.baseURL = "http://localhost:3000";
+axios.baseURL = process.env.baseURL || "http://localhost:3000";
 
 const inter = Inter({ subsets: ["latin"] });
 

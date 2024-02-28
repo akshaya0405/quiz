@@ -13,7 +13,7 @@ const Timer = ({ timeRemaining }) => {
     <div className="flex items-center">
       <Button
         className={cn(
-          "w-24 font-semibold text-lg flex gap-2 justify-center items-center",
+          "w-28 font-semibold text-lg flex gap-2 justify-center items-center",
           {
             "bg-red-500 hover:bg-red-400 border-red-500 hover:border-red-400":
               timeRemaining < 20,
@@ -22,15 +22,15 @@ const Timer = ({ timeRemaining }) => {
         )}
         variant="outline"
       >
-        <div className="">
-          <Hourglass
-            visible={true}
-            height="100"
-            width="80"
-            ariaLabel="hourglass-loading"
-            colors={["#000", "#000"]}
-          />
-        </div>
+        {/* <div className=""> */}
+        <Hourglass
+          visible={true}
+          height="120"
+          width="100"
+          ariaLabel="hourglass-loading"
+          colors={["#000", "#000"]}
+        />
+        {/* </div> */}
         <p className="w-11">{convertTime(timeRemaining)}</p>
       </Button>
       {/* <Button onClick={() => localStorage.removeItem("timeRemaining")}>
