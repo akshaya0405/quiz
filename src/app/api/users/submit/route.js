@@ -18,7 +18,10 @@ export const POST = async (req) => {
 
     await db
       .collection("users")
-      .updateOne({ contact: data.contact }, { $set: { score: score } });
+      .updateOne(
+        { contact: data.contact },
+        { $set: { score: score, submitTime: 120 - data.timeRemaining } }
+      );
 
     return Response.json({ score });
   } catch (error) {

@@ -4,12 +4,18 @@ import axios from "axios";
 import Timer from "../../components/Timer";
 import Loading from "../../components/Loading";
 import { Button } from "../../components/ui/button";
+import { toast } from "../../components/ui/use-toast";
+import { useRouter } from "next/navigation";
+import useWindowSize from "react-use/lib/useWindowSize";
+import Confetti from "react-confetti";
 
 const Page = () => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(null);
   const [quizStarted, setQuizStarted] = useState(false);
+  const router = useRouter();
+  const { width, height } = useWindowSize();
 
   const [timeRemaining, setTimeRemaining] = useState(() => {
     const storedTimeRemaining =
@@ -18,10 +24,10 @@ const Page = () => {
   });
 
   const fetchData = async () => {
-    console.log("fetching data");
     try {
       let level;
       if (typeof window !== "undefined") {
+        console.log(localStorage.getItem("user"));
         level =
           JSON.parse(localStorage.getItem("user")).type === "btech" ? 2 : 1;
       }
@@ -41,9 +47,11 @@ const Page = () => {
         contact: JSON.parse(
           typeof window !== "undefined" && localStorage.getItem("user")
         ).contact,
+        timeRemaining,
       });
-      console.log(res);
-      alert(`Your score is ${res.data.score}`);
+      // console.log(res);
+      setScore(res.data.score);
+      // alert(`Your score is ${res.data.score}`);
       typeof window !== "undefined" && localStorage.removeItem("timeRemaining");
       typeof window !== "undefined" && localStorage.removeItem("questions");
       typeof window !== "undefined" && localStorage.removeItem("user");
@@ -116,7 +124,7 @@ const Page = () => {
   // console.log(currentQuestion?.answers);
   // console.log(questions);
 
-  if (!quizStarted)
+  if (!quizStarted && score === null)
     return (
       <div className="flex justify-center items-center h-full">
         <div className="bg-gray-100/90  w-96 text-center rounded-xl shadow-inner shadow-zinc-400 p-8">
@@ -143,7 +151,14 @@ const Page = () => {
             </li>
           </ul>
 
-          <Button onClick={() => setQuizStarted(true)} className="mt-8">
+          <Button
+            onClick={() => {
+              toast({ title: "All the best for your quiz!" });
+
+              setQuizStarted(true);
+            }}
+            className="mt-8"
+          >
             {timeRemaining > 0 && timeRemaining != 120 ? "Continue" : "Start"}{" "}
             Quiz
           </Button>
@@ -155,7 +170,7 @@ const Page = () => {
 
   return (
     <div className="flex flex-col justify-center items-center gap-8">
-      {quizStarted && (
+      {quizStarted && score === null && (
         <>
           <Timer timeRemaining={timeRemaining} />
           <div className="w-96 p-8 rounded-xl shadow-inner shadow-zinc-400	 bg-white">
@@ -234,6 +249,27 @@ const Page = () => {
             )}
           </div>
         </>
+      )}
+      {score !== null && (
+        <div className="mt-8 flex justify-center flex-col items-center gap-5">
+          {score >= 8 && <Confetti width={width} height={height} />}
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h1 className="text-3xl font-bold">
+              {score >= 8
+                ? "Congratulations, you have won a prize!"
+                : "Better luck next time!!"}
+            </h1>
+            <p className="text-lg font-semibold mt-4">Your score: {score}</p>
+          </div>
+          <Button
+            // variant="primary"
+            onClick={() => {
+              router.push("/leaderboard");
+            }}
+          >
+            View Leaderboard
+          </Button>
+        </div>
       )}
     </div>
   );

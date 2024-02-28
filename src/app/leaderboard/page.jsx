@@ -27,6 +27,7 @@ const Leaderboard = () => {
     };
     fetchData();
   }, []);
+  console.log(leaderboard);
 
   if (leaderboard.length === 0) return <Loading />;
 
