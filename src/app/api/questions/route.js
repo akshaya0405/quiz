@@ -15,10 +15,10 @@ function shuffleAndReturnTop10(array) {
   return array.slice(0, 10);
 }
 export const GET = async (req) => {
+  const query = req.nextUrl.searchParams;
+  let level = query.get("level");
+  level = parseInt(level);
   try {
-    const query = req.nextUrl.searchParams;
-    let level = query.get("level");
-    level = parseInt(level);
     let questions = await db
       .collection("questions")
       .find({ level: level })
