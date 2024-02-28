@@ -27,6 +27,9 @@ const RegistrationForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    typeof window !== "undefined" && localStorage.removeItem("user");
+    typeof window !== "undefined" && localStorage.removeItem("questions");
+    typeof window !== "undefined" && localStorage.removeItem("timeRemaining");
     const res = await axios.post("/api/users", formData);
     console.log(res);
     if (res.status === 200) {
