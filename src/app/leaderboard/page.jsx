@@ -33,7 +33,7 @@ const Leaderboard = () => {
   if (leaderboard.length === 0) return <Loading />;
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col justify-center items-center w-full h-full">
       <div className="flex justify-center gap-3">
         <div className="relative bg-white w-[150px] h-[70px] rounded-3xl flex items-center justify-center pb-1 pl-1">
           <Image
@@ -59,7 +59,7 @@ const Leaderboard = () => {
         width="250"
         height="70"
       />
-      <Table className="bg-white rounded-lg overflow-hidden w-[1200px]">
+      <Table className="bg-white rounded-lg !overflow-hidden w-[1200px] mx-auto">
         <TableHeader>
           <TableRow className=" border-b-2  border-blue-600">
             <TableHead className="text-center text-blue-700 font-extrabold text-xl">
