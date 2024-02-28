@@ -82,9 +82,9 @@ const Page = () => {
           )
         );
       } else fetchData();
-      // window.interval = setInterval(() => {
-      //   setTimeRemaining((prev) => prev - 1);
-      // }, 1000);
+      window.interval = setInterval(() => {
+        setTimeRemaining((prev) => prev - 1);
+      }, 1000);
       return () => window.clearInterval(window.interval);
     }
   }, [quizStarted]);
