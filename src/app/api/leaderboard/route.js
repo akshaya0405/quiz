@@ -7,7 +7,7 @@ export const GET = async (req) => {
   try {
     const users = await db
       .collection("users")
-      .find({}, { sort: { score: -1 } })
+      .find({}, { sort: { score: -1 }, limit: 10 })
       .toArray();
 
     return Response.json({ users });

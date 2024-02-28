@@ -15,7 +15,9 @@ export const POST = async (req) => {
         { status: 400 }
       );
     }
-    await db.collection("users").insertOne({ ...data, score: 0 });
+    await db
+      .collection("users")
+      .insertOne({ ...data, score: 0, submitTime: 120 });
 
     return Response.json({ message: "Successful Registration" });
   } catch (error) {
