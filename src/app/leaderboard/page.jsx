@@ -26,7 +26,7 @@ const Leaderboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const leaderboardResponse = await axios.get(
+        const leaderboardResponse = await axios.post(
           `/api/leaderboard?date=${new Date().getTime()}`,
           {
             headers: {
