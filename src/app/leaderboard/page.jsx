@@ -15,6 +15,8 @@ import {
 
 import Loading from "../../components/Loading";
 
+export const revalidateTime = 10;
+
 const convertTime = (time) => {
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;

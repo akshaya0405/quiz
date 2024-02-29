@@ -232,7 +232,7 @@ const Page = () => {
                         onClick={() =>
                           setQuestions((prev) =>
                             prev.map((q) => {
-                              console.log(q);
+                              // console.log(q);
                               if (q._id === currentQuestion._id)
                                 return { ...q, markedAnswer: answer };
                               else return q;
