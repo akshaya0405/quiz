@@ -28,8 +28,11 @@ const Leaderboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const leaderboardResponse = await axios.get("/api/leaderboard");
-        setLeaderboard(leaderboardResponse.data.users);
+        const leaderboardResponse = await fetch("/api/leaderboard", {
+          cache: "no-store",
+        });
+        const res = await leaderboardResponse.json();
+        setLeaderboard(res.users);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
