@@ -26,13 +26,16 @@ const Leaderboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const leaderboardResponse = await axios.get("/api/leaderboard", {
-          headers: {
-            "Cache-Control": "no-cache",
-            Pragma: "no-cache",
-            Expires: "0",
-          },
-        });
+        const leaderboardResponse = await axios.get(
+          `/api/leaderboard?date=${new Date().getTime()}`,
+          {
+            headers: {
+              "Cache-Control": "no-cache",
+              Pragma: "no-cache",
+              Expires: "0",
+            },
+          }
+        );
         setLeaderboard(leaderboardResponse.data.users);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -40,7 +43,7 @@ const Leaderboard = () => {
     };
     fetchData();
   }, []);
-  console.log(leaderboard);
+  // console.log(leaderboard);
 
   if (leaderboard.length === 0) return <Loading />;
 
