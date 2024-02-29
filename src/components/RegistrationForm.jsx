@@ -43,13 +43,21 @@ const RegistrationForm = () => {
       return;
     }
 
-    const res = await axios.post("/api/users", formData);
-    if (res.status === 200) {
-      // toast({ title: "All the best for your quiz!" });
-      typeof window !== "undefined" &&
-        localStorage.setItem("user", JSON.stringify(formData));
-      router.push("/quiz");
-    } else toast({ title: res.data, variant: "destructive" });
+    try {
+      const res = await axios.post("/api/users", formData);
+      if (res.status === 200) {
+        // toast({ title: "All the best for your quiz!" });
+        typeof window !== "undefined" &&
+          localStorage.setItem("user", JSON.stringify(formData));
+        router.push("/quiz");
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: JSON.stringify(error?.response?.data?.error || error.message),
+        variant: "destructive",
+      });
+    }
   };
 
   return (

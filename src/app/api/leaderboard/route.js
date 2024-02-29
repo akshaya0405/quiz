@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 import clientPromise from "../../../utils/db";
 
 const client = await clientPromise;
@@ -7,11 +8,11 @@ export const GET = async (req) => {
   try {
     const users = await db
       .collection("users")
-      .find({}, { sort: { score: -1 }, limit: 10 })
+      .find({}, { sort: { score: -1, submitTime: 1 }, limit: 5 })
       .toArray();
 
-    return Response.json({ users });
+    return NextResponse.json({ users });
   } catch (error) {
-    return Response.json({ error });
+    return NextResponse.json({ error });
   }
 };
