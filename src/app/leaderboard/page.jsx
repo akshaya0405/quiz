@@ -15,8 +15,6 @@ import {
 
 import Loading from "../../components/Loading";
 
-export const revalidateTime = 10;
-
 const convertTime = (time) => {
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;
@@ -28,11 +26,14 @@ const Leaderboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const leaderboardResponse = await fetch("/api/leaderboard", {
-          cache: "no-store",
+        const leaderboardResponse = await axios.get("/api/leaderboard", {
+          headers: {
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
         });
-        const res = await leaderboardResponse.json();
-        setLeaderboard(res.users);
+        setLeaderboard(leaderboardResponse.data.users);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
