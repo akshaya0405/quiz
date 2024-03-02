@@ -263,7 +263,7 @@ const Page = () => {
               </div>
             )}
           </div>
-          <div className="w-full flex justify-between ">
+          <div className="w-full flex justify-between">
             {!isFirstQuestion && (
               <Button
                 onClick={prevQuestion}

@@ -61,7 +61,7 @@ const RegistrationForm = () => {
   };
 
   return (
-    <div className="bg-white p-8 rounded-xl shadow-md w-1/3">
+    <div className="bg-yellow-300 p-8 rounded-xl shadow-md w-1/3">
       {/* <h2 className="text-xl font-semibold mb-4">Registration Form</h2> */}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -78,7 +78,7 @@ const RegistrationForm = () => {
             placeholder="Enter your name"
             value={formData.name}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded"
+            className="w-full px-4 py-2 border rounded placeholder:font-light"
             required
           />
         </div>
@@ -96,7 +96,7 @@ const RegistrationForm = () => {
             placeholder="Enter your phone number"
             value={formData.contact}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded"
+            className="w-full px-4 py-2 border rounded placeholder:font-light"
             required
           />
         </div>
@@ -128,7 +128,6 @@ const RegistrationForm = () => {
         <div className="flex justify-center">
           <Button
             type="submit"
-            variant="outline"
             className="bg-blue-500 font-bold px-4 py-2 rounded-lg transition duration-300 mt-2"
           >
             Continue -&gt;

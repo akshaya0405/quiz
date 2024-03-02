@@ -12,7 +12,7 @@ export const POST = async (req) => {
       let question = data.questions[i];
       if (
         question.markedAnswer &&
-        question.correctAnswer === question.markedAnswer
+        question?.markedAnswer.includes(question.correctAnswer)
       )
         score++;
     }
