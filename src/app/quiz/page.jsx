@@ -10,6 +10,7 @@ import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
 import Image from "next/image";
 import { cn } from "../../lib/utils";
+import Leaderboard from "../../components/Leaderboard";
 
 const Page = () => {
   const [questions, setQuestions] = useState([]);
@@ -292,9 +293,9 @@ const Page = () => {
         </>
       )}
       {score !== null && (
-        <div className="mt-8 flex justify-center flex-col items-center gap-5">
+        <div className="flex justify-center flex-col items-center gap-12">
           {score >= 8 && <Confetti width={width} height={height} />}
-          <div className="bg-white rounded-xl shadow-md p-6">
+          <div className="bg-white rounded-xl shadow-md p-6 text-center">
             <h1 className="text-3xl font-bold">
               {score >= 8
                 ? "Congratulations, you have won a prize!"
@@ -302,14 +303,15 @@ const Page = () => {
             </h1>
             <p className="text-lg font-semibold mt-4">Your score: {score}</p>
           </div>
-          <Button
+          <Leaderboard />
+          {/* <Button
             // variant="primary"
             onClick={() => {
               router.push("/leaderboard");
             }}
           >
             View Leaderboard
-          </Button>
+          </Button> */}
         </div>
       )}
     </div>
