@@ -11,6 +11,7 @@ import Confetti from "react-confetti";
 import Image from "next/image";
 import { cn } from "../../lib/utils";
 import Leaderboard from "../../components/Leaderboard";
+import { limit } from "../../lib/constants";
 
 const Page = () => {
   const [questions, setQuestions] = useState([]);
@@ -159,7 +160,7 @@ const Page = () => {
             </li>
             <li className="mb-2">
               <span className="font-bold">5. </span>You will get a Prize for a
-              score of 8/10 and above.
+              score of {limit}/10 and above.
             </li>
           </ul>
 
@@ -294,10 +295,10 @@ const Page = () => {
       )}
       {score !== null && (
         <div className="flex justify-center flex-col items-center gap-12">
-          {score >= 8 && <Confetti width={width} height={height} />}
+          {score >= limit && <Confetti width={width} height={height} />}
           <div className="bg-white rounded-xl shadow-md p-6 text-center">
             <h1 className="text-3xl font-bold">
-              {score >= 8
+              {score >= limit
                 ? "Congratulations, you have won a prize!"
                 : "Better luck next time!!"}
             </h1>
