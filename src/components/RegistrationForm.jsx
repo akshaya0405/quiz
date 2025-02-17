@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import Image from 'next/image'
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -46,7 +47,7 @@ const RegistrationForm = () => {
     try {
       const res = await axios.post("/api/users", formData);
       if (res.status === 200) {
-        // toast({ title: "All the best for your quiz!" });
+        toast({ title: "All the best for your quiz!" });
         typeof window !== "undefined" &&
           localStorage.setItem("user", JSON.stringify(formData));
         router.push("/quiz");
@@ -61,7 +62,7 @@ const RegistrationForm = () => {
   };
 
   return (
-    <div className="bg-yellow-300 p-8 rounded-xl shadow-md w-1/3">
+    <div className="bg-white p-8 rounded-xl shadow-md w-1/3">
       {/* <h2 className="text-xl font-semibold mb-4">Registration Form</h2> */}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">

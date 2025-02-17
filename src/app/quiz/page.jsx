@@ -12,82 +12,69 @@ import Image from "next/image";
 import { cn } from "../../lib/utils";
 import Leaderboard from "../../components/Leaderboard";
 import { limit } from "../../lib/constants";
+import Link from "next/link";
 
 const Page = () => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(null);
   const [quizStarted, setQuizStarted] = useState(false);
-  const router = useRouter();
   const { width, height } = useWindowSize();
 
   const [timeRemaining, setTimeRemaining] = useState(() => {
-    const storedTimeRemaining =
-      typeof window !== "undefined" && localStorage.getItem("timeRemaining");
-    return storedTimeRemaining ? parseInt(storedTimeRemaining) : 120;
+    if (typeof window !== "undefined") {
+      return parseInt(localStorage.getItem("timeRemaining")) || 120;
+    }
+    return 120;
   });
 
   const fetchData = async () => {
     try {
-      let level;
-      if (typeof window !== "undefined") {
-        console.log(localStorage.getItem("user"));
-        level =
-          JSON.parse(localStorage.getItem("user")).type === "btech" ? 2 : 1;
+      let level = typeof window !== "undefined"
+        ? (JSON.parse(localStorage.getItem("user"))?.type === "btech" ? 2 : 1)
+        : 1;
+
+      const { data } = await axios.get(`/api/questions?level=${level}`);
+
+      console.log("✅ API Response:", data);
+
+      if (data.questions?.length > 0) {
+        setQuestions(data.questions);
+      } else {
+        toast({ title: "No questions found for this level!", variant: "destructive" });
       }
-      const questions = await axios.get(`/api/questions?level=${level}`);
-      console.log(questions);
-      setQuestions(questions.data.questions);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("❌ Error fetching data:", error);
+      toast({ title: "Failed to load questions!", variant: "destructive" });
     }
   };
 
   const onSubmit = async () => {
     try {
       window.clearInterval(window.interval);
+      const user = JSON.parse(localStorage.getItem("user"));
       const res = await axios.post("/api/users/submit", {
         questions,
-        contact: JSON.parse(
-          typeof window !== "undefined" && localStorage.getItem("user")
-        ).contact,
+        contact: user?.contact,
         timeRemaining,
       });
-      // console.log(res);
+
       setScore(res.data.score);
-      // alert(`Your score is ${res.data.score}`);
-      typeof window !== "undefined" && localStorage.removeItem("timeRemaining");
-      typeof window !== "undefined" && localStorage.removeItem("questions");
-      typeof window !== "undefined" && localStorage.removeItem("user");
-    } catch (error) {}
+      ["timeRemaining", "questions", "user"].forEach((key) => localStorage.removeItem(key));
+    } catch (error) {
+      console.error("Submission error:", error);
+    }
   };
 
   useEffect(() => {
-    // console.log(localStorage.getItem("questions"));
-  }, []);
-
-  useEffect(() => {
-    // if (localStorage.getItem("timeRemaining"))
-    //   setTimeRemaining((prev) =>
-    //     localStorage.getItem("timeRemaining")
-    //       ? localStorage.getItem("timeRemaining")
-    //       : 120
-    //   );
     if (quizStarted) {
-      if (
-        typeof window !== "undefined" &&
-        localStorage.getItem("questions") &&
-        JSON.parse(localStorage.getItem("questions")) != 0
-      ) {
-        setQuestions(
-          JSON.parse(
-            typeof window !== "undefined" && localStorage.getItem("questions")
-          )
-        );
-      } else fetchData();
-      window.interval = setInterval(() => {
-        setTimeRemaining((prev) => prev - 1);
-      }, 1000);
+      if (localStorage.getItem("questions")) {
+        setQuestions(JSON.parse(localStorage.getItem("questions")));
+      } else {
+        fetchData();
+      }
+
+      window.interval = setInterval(() => setTimeRemaining((prev) => prev - 1), 1000);
       return () => window.clearInterval(window.interval);
     }
   }, [quizStarted]);
@@ -96,227 +83,176 @@ const Page = () => {
     if (timeRemaining <= 0) {
       window.clearInterval(window.interval);
       onSubmit();
-      return;
     } else {
-      typeof window !== "undefined" &&
-        localStorage.setItem("timeRemaining", timeRemaining);
+      localStorage.setItem("timeRemaining", timeRemaining);
     }
   }, [timeRemaining]);
 
   useEffect(() => {
-    if (questions?.length > 0)
-      typeof window !== "undefined" &&
-        localStorage.setItem("questions", JSON.stringify(questions));
+    if (questions.length > 0) {
+      localStorage.setItem("questions", JSON.stringify(questions));
+    }
   }, [questions]);
 
-  const nextQuestion = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    }
+  const handleAnswerSelect = (choice) => {
+    setQuestions((prev) =>
+      prev.map((q, idx) =>
+        idx === currentQuestionIndex ? { ...q, markedAnswer: choice } : q
+      )
+    );
+
+    console.log("✅ Selected Answer:", choice);
   };
 
-  const prevQuestion = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-    }
-  };
+  useEffect(() => {
+    console.log("✅ Updated Questions State:", questions);
+  }, [questions]);
 
-  const currentQuestion = questions?.[currentQuestionIndex];
-  const isFirstQuestion = currentQuestionIndex === 0;
-  const isLastQuestion = currentQuestionIndex === questions?.length - 1;
-
-  // console.log(currentQuestion?.answers);
-  // console.log(questions);
+  const currentQuestion = questions[currentQuestionIndex];
 
   if (!quizStarted && score === null)
     return (
-      <div className="flex flex-col justify-start gap-5 items-center h-full">
-        <div className="relative bg-white w-[150px] h-[70px] rounded-3xl flex items-center justify-center pb-1 pl-1">
-          <Image
-            src="/logo.png"
-            width="300"
-            height="300"
-            alt="logo"
-            // className="border"
-          />
-        </div>
-        <div className="bg-gray-100/90  w-1/2 text-center rounded-xl shadow-inner shadow-zinc-400 p-8">
-          <h1 className="text-gray-900/90 font-bold text-3xl">Instructions</h1>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-yellow-200 to-yellow-400 py-10">
+        <Image src="/backdrop.png" width="250" height="250" alt="Quiz Logo" className="mb-4" />
+        <div className="bg-white shadow-xl rounded-3xl p-10 max-w-lg text-center border border-gray-300">
+          
+ <h1 className="text-gray-900 font-extrabold text-4xl mb-4 tracking-wide flex items-center justify-center">
+    📜 Instructions
+  </h1>
 
-          <ul className="text-left mt-4 text-lg">
-            <li className="mb-2">
-              <span className="font-bold">1. </span>There are 10 questions, 1
-              marks each.
-            </li>
-            <li className="mb-2">
-              <span className="font-bold">2. </span>The questions are MCQs.
-            </li>
-            <li className="mb-2">
-              <span className="font-bold">3. </span>No negative markings.
-            </li>
-            <li className="mb-2">
-              <span className="font-bold">4. </span>You will get 2 minutes to
-              answer all questions. Quiz will be auto-submitted after it.
-            </li>
-            <li className="mb-2">
-              <span className="font-bold">5. </span>You will get a Prize for a
-              score of {limit}/10 and above.
-            </li>
-          </ul>
-
+  <ul className="text-left mt-4 text-lg text-gray-800 space-y-4">
+    <li className="flex items-center gap-3">
+      <span className="bg-blue-600 text-white font-semibold px-3 py-1 rounded-full">1</span>
+      There are <span className="font-bold">10 questions</span>, 1 mark each.
+    </li>
+    <li className="flex items-center gap-3">
+      <span className="bg-blue-600 text-white font-semibold px-3 py-1 rounded-full">2</span>
+      The questions are <span className="font-bold">MCQs</span>.
+    </li>
+    <li className="flex items-center gap-3">
+      <span className="bg-blue-600 text-white font-semibold px-3 py-1 rounded-full">3</span>
+      <span className="font-bold">No negative markings</span>.
+    </li>
+    <li className="flex items-center gap-3">
+      <span className="bg-blue-600 text-white font-semibold px-3 py-1 rounded-full">4</span>
+      <div>
+        You have <span className="font-bold">2 minutes</span> to answer all questions.<br />
+        The quiz will be <span className="text-red-500 font-semibold">auto-submitted</span> when time runs out.
+      </div>
+    </li>
+    <li className="flex items-center gap-3">
+      <span className="bg-blue-600 text-white font-semibold px-3 py-1 rounded-full">5</span>
+      Score <span className="font-bold">{limit}/10</span> or more to win a <span className="text-green-600 font-semibold">Prize 🎉</span>!
+    </li>
+  </ul>
           <Button
             onClick={() => {
-              toast({
-                className: cn(
-                  "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
-                ),
-                title: "All the best for your quiz!",
-              });
-
+              toast({ title: "All the best for your quiz!" });
               setQuizStarted(true);
             }}
-            className="mt-8"
+            className="mt-6 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl text-lg font-semibold shadow-lg transition-all"
           >
-            {timeRemaining > 0 && timeRemaining != 120 ? "Continue" : "Start"}{" "}
-            Quiz
+            {timeRemaining > 0 && timeRemaining !== 120 ? "Continue" : "Start"} Quiz
           </Button>
         </div>
       </div>
     );
 
-  if (questions && questions.length === 0) return <Loading />;
-
   return (
-    <div className="flex flex-col items-center h-full gap-8 ">
+    <div className="flex flex-col items-center min-h-screen bg-gray-100 py-10">
       {quizStarted && score === null && (
         <>
-          <div className="flex justify-center items-center flex-row-reverse gap-4">
-            <Timer timeRemaining={timeRemaining} />
-            <div className="relative bg-white w-[150px] h-[70px] rounded-3xl flex items-center justify-center pb-1 pl-1">
-              <Image
-                src="/logo.png"
-                width="300"
-                height="300"
-                alt="logo"
-                // className="border"
-              />
+          <Timer timeRemaining={timeRemaining} />
+          <div className="bg-white shadow-md rounded-xl p-6 w-[90%] max-w-2xl mt-5">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">
+              Question {currentQuestionIndex + 1} / {questions.length}
+            </h2>
+            <p className="text-lg text-gray-700">{currentQuestion?.question}</p>
+            <ul className="mt-6 space-y-4">
+              {currentQuestion?.choices.map((choice, index) => (
+                <li
+                  key={index}
+                  className={`p-3 border rounded-lg cursor-pointer text-lg font-medium transition-all 
+                    ${currentQuestion?.markedAnswer === choice ? "bg-blue-500 text-white" : "bg-gray-200 hover:bg-gray-300"}`}
+                  onClick={() => handleAnswerSelect(choice)}
+                >
+                  {choice}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-6 flex justify-between">
+              {currentQuestionIndex > 0 && (
+                <Button
+                  onClick={() => setCurrentQuestionIndex((prev) => prev - 1)}
+                  className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                >
+                  ← Previous
+                </Button>
+              )}
+              {currentQuestionIndex < questions.length - 1 ? (
+                <Button
+                  onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                >
+                  Next →
+                </Button>
+              ) : (
+                <Button onClick={onSubmit} className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                  Submit
+                </Button>
+              )}
             </div>
-          </div>
-          <div className="w-1/2 h-4/5 p-8 rounded-xl shadow-inner shadow-zinc-400 bg-white">
-            {currentQuestion && (
-              <div>
-                <div className="mb-4 flex gap-1">
-                  <h3 className="font-bold px-1 pt-3 text-sm text-zinc-500">
-                    {" "}
-                    QUESTION
-                  </h3>
-                  <h6 className="text-2xl pt-0.5 font-bold text-zinc-700">
-                    {currentQuestionIndex + 1}
-                  </h6>
-                  <p className="pt-2 text-zinc-500 font-bold">
-                    /{questions.length}:
-                  </p>
-                </div>
-                <h3 className="mb-4 text-lg font-semibold">
-                  {currentQuestion.question}
-                </h3>
-                {/* <h4>{currentQuestion.level}</h4> */}
-                <ul>
-                  {currentQuestion?.answers.map((answer, index) => {
-                    return (
-                      <li
-                        key={index}
-                        className={`cursor-pointer rounded-lg h-12 gap-2 flex px-3 w-full pb-1 my-2 items-center shadow-sm transition ease-in-out hover:-translate-y-0.5 scale-100 ${
-                          answer == currentQuestion.markedAnswer
-                            ? "bg-blue-200 border border-blue-500"
-                            : "bg-zinc-200 hover:bg-zinc-400 shadow duration-150"
-                        }`}
-                        onClick={() =>
-                          setQuestions((prev) =>
-                            prev.map((q) => {
-                              // console.log(q);
-                              if (q._id === currentQuestion._id)
-                                return { ...q, markedAnswer: answer };
-                              else return q;
-                            })
-                          )
-                        }
-                      >
-                        <div
-                          className={`font-semibold border-2 p-1 w-6 h-6 rounded-md flex justify-center items-center ${
-                            answer == currentQuestion.markedAnswer
-                              ? "bg-blue-500/80 border-blue-500"
-                              : "bg-zinc-100 border-zinc-300"
-                          }`}
-                        >
-                          {"ABCD"[index]}
-                        </div>
-                        <p className="text-gray-800 font-bold text-md">
-                          {answer}
-                        </p>
-                      </li>
-                    );
-                  })}
-                </ul>
-                {/* <div className="mt-6 flex justify-between">
-                  
-                </div> */}
-              </div>
-            )}
-          </div>
-          <div className="w-full flex justify-between">
-            {!isFirstQuestion && (
-              <Button
-                onClick={prevQuestion}
-                className="px-4 py-2 rounded bg-blue-500 shadow-md text-white hover:bg-blue-600 focus:outline-none"
-              >
-                &lt;- Previous
-              </Button>
-            )}
-            {isLastQuestion ? (
-              <Button
-                onClick={() => onSubmit()}
-                className="px-4 py-2 rounded bg-yellow-600 shadow-md text-white hover:bg-yellow-500 focus:outline-none"
-              >
-                Submit
-              </Button>
-            ) : (
-              <Button
-                onClick={nextQuestion}
-                className={`px-4 py-2 rounded bg-blue-500 shadow-md text-white hover:bg-blue-600 focus:outline-none ${
-                  isFirstQuestion ? "ml-auto" : ""
-                }`}
-              >
-                Next -&gt;
-              </Button>
-            )}
           </div>
         </>
       )}
-      {score !== null && (
-        <div className="flex justify-center flex-col items-center gap-12">
-          {score >= limit && <Confetti width={width} height={height} />}
-          <div className="bg-white rounded-xl shadow-md p-6 text-center">
-            <h1 className="text-3xl font-bold">
-              {score >= limit
-                ? "Congratulations, you have won a prize!"
-                : "Better luck next time!!"}
-            </h1>
-            <p className="text-lg font-semibold mt-4">Your score: {score}</p>
-          </div>
-          <Leaderboard />
-          {/* <Button
-            // variant="primary"
-            onClick={() => {
-              router.push("/leaderboard");
-            }}
-          >
-            View Leaderboard
-          </Button> */}
+
+{score !== null && (
+  <div className="flex flex-col items-center justify-center mt-10 space-y-6">
+    {score >= limit ? (
+      <>
+        <Confetti width={width} height={height} />
+        <div className="bg-green-100 border border-green-400 text-green-900 px-8 py-6 rounded-2xl shadow-lg animate-fadeIn">
+          <h1 className="text-4xl font-extrabold flex items-center gap-3">
+            🎉 Congratulations!  
+          </h1>
+          <p className="text-lg font-semibold mt-2 text-green-700">
+            You aced the quiz! Keep it up! 🚀
+          </p>
         </div>
-      )}
+      </>
+    ) : (
+      <div className="bg-red-100 border border-red-400 text-red-900 px-8 py-6 rounded-2xl shadow-lg animate-fadeIn">
+        <h1 className="text-4xl font-extrabold flex items-center gap-3">
+          Better luck next time!
+        </h1>
+      </div>
+    )}
+
+    <div className="bg-white shadow-xl rounded-3xl p-8 w-80 text-center animate-scaleIn">
+      <h2 className="text-2xl font-bold text-gray-800 tracking-wide">
+        🏅 Your Score
+      </h2>
+      <p className={`text-5xl font-extrabold mt-2 ${score >= limit ? "text-green-600" : "text-red-600"}`}>
+        {score} / 10
+      </p>
     </div>
-  );
-};
+
+    <div className="w-full max-w-lg p-6 bg-white shadow-xl rounded-2xl text-center animate-slideUp">
+  <h2 className="text-3xl font-extrabold text-gray-900 mb-4 flex items-center justify-center gap-2">
+    🏆 Leaderboard
+  </h2>
+  <p className="text-lg text-gray-600 mb-6">
+    Check the top scores and see how you rank!
+  </p>
+  <Link href="/leaderboard">
+    <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl shadow-md transition-transform transform hover:scale-105">
+      View Leaderboard →
+    </button>
+  </Link>
+</div>
+  </div>
+)}
+    </div>
+  )}
 
 export default Page;

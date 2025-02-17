@@ -9,15 +9,16 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import Image from "next/image";
 
 const Leaderboard = () => {
   const [leaderboard, setLeaderboard] = useState([]);
+
   const convertTime = (time) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
-    return `${minutes} : ${seconds < 10 ? `0${seconds}` : `${seconds}`}`;
+    return `${minutes} : ${seconds < 10 ? `0${seconds}` : seconds}`;
   };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -38,49 +39,54 @@ const Leaderboard = () => {
     };
     fetchData();
   }, []);
-  // console.log(leaderboard);
 
   if (leaderboard.length === 0) return <Loading />;
+
   return (
-    <div className="w-full flex flex-col items-center">
-      <Image
-        src="/leaderboard.png"
-        alt=""
-        className="justify-center -mt-4"
-        width="250"
-        height="70"
-      />
-      <Table className="bg-white rounded-lg !overflow-hidden w-[1200px] mx-auto caption-top">
-        <TableHeader>
-          <TableRow className=" border-b-2  border-blue-600">
-            <TableHead className="text-center text-blue-700 font-extrabold text-xl">
-              Rank
-            </TableHead>
-            <TableHead className="text-center text-blue-700 font-extrabold text-xl">
-              Name
-            </TableHead>
-            <TableHead className="text-center text-blue-700 font-extrabold text-xl">
-              Score
-            </TableHead>
-            <TableHead className="text-center text-blue-700 font-extrabold text-xl">
-              Time
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {leaderboard?.map((user, index) => (
-            <TableRow key={user._id} className="border-blue-300">
-              <TableCell className="text-center">{index + 1}</TableCell>
-              <TableCell className="text-center">{user.name}</TableCell>
-              <TableCell className="text-center">{user.score}</TableCell>
-              <TableCell className="text-center">
-                {convertTime(user.submitTime)}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+    <div className="w-full flex flex-col items-center justify-center bg-gray-50 p-10 overflow-hidden">
+      <h1 className="text-5xl font-extrabold text-gray-900 flex items-center gap-3 mb-8">
+        ⭐ <span className="text-[#2A6BB5]">LEADERBOARD</span> ⭐
+      </h1>
+      <div className="w-full max-w-4xl">
+  <Table className="bg-white shadow-2xl rounded-2xl overflow-hidden w-full border border-gray-300">
+    {/* Header */}
+    <TableHeader>
+  <TableRow className="bg-[#2A6BB5] text-white">
+    <TableHead className="text-center font-extrabold text-xl py-3 !text-white !opacity-100">
+      🏆 Rank
+    </TableHead>
+    <TableHead className="text-center font-extrabold text-xl py-3 !text-white !opacity-100">
+      👤 Name
+    </TableHead>
+    <TableHead className="text-center font-extrabold text-xl py-3 !text-white !opacity-100">
+      📊 Score
+    </TableHead>
+    <TableHead className="text-center font-extrabold text-xl py-3 !text-white !opacity-100">
+      ⏳ Time
+    </TableHead>
+    <TableHead className="text-center font-extrabold text-xl py-3 !text-white !opacity-100">
+      📝 Quizzes Attempted
+    </TableHead>
+  </TableRow>
+</TableHeader>
+
+    {/* Body */}
+    <TableBody>
+      {leaderboard?.map((user, index) => (
+        <TableRow
+          key={user._id}
+          className={`text-lg font-medium ${index % 2 === 0 ? "bg-gray-100" : "bg-white"} focus:outline-none`}
+        >
+          <TableCell className="text-center p-4 font-bold text-gray-900">{index + 1}</TableCell>
+          <TableCell className="text-center p-4 text-gray-900">{user.name || "N/A"}</TableCell>
+          <TableCell className="text-center p-4 text-green-600 font-semibold">{user.score || 0}</TableCell>
+          <TableCell className="text-center p-4 text-gray-700">{convertTime(user.submitTime) || "0:00"}</TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+</div>
+</div>
   );
 };
 

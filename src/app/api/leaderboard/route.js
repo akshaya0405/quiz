@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import clientPromise from "../../../utils/db";
 
 const client = await clientPromise;
-const db = client.db("quiz");
+const db = client.db("SITQUIZ");
 
 export const GET = async (req) => {
   try {

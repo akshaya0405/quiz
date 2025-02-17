@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "../../../utils/db";
 
 const client = await clientPromise;
-const db = client.db("quiz");
+const db = client.db("SITQUIZ");
 
 function shuffleAndReturnTop10(array) {
   // Fisher-Yates shuffle algorithm

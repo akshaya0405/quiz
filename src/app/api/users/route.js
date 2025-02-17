@@ -1,7 +1,7 @@
 import clientPromise from "../../../utils/db";
 
 const client = await clientPromise;
-const db = client.db("quiz");
+const db = client.db("SITQUIZ");
 export const POST = async (req) => {
   try {
     const data = await req.json();
