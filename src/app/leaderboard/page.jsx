@@ -35,7 +35,7 @@ const Leaderboard = () => {
       <Table className="bg-white rounded-lg overflow-hidden text-center w-3/4">
         <TableHeader>
           <TableRow>
-            <TableHead className="px-4 py-2 text-center text-3xl text-blue-600 font-bold">
+            <TableHead className="px-4 py-2 text-center text-3xl text-green-600 font-bold">
               Leaderboard
             </TableHead>
           </TableRow>
