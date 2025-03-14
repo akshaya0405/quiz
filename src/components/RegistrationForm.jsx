@@ -1,3 +1,5 @@
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -10,8 +12,6 @@ import {
   SelectValue,
 } from "./ui/select";
 import { toast } from "./ui/use-toast";
-import axios from "axios";
-import { useRouter } from "next/navigation";
 
 const RegistrationForm = () => {
   const [formData, setFormData] = useState({
@@ -27,10 +27,13 @@ const RegistrationForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    typeof window !== "undefined" && localStorage.removeItem("user");
+    typeof window !== "undefined" && localStorage.removeItem("questions");
+    typeof window !== "undefined" && localStorage.removeItem("timeRemaining");
     const res = await axios.post("/api/users", formData);
     console.log(res);
     if (res.status === 200) {
-      toast({ title: "All the best for your quiz!" });
+      // toast({ title: "All the best for your quiz!" });
       typeof window !== "undefined" &&
         localStorage.setItem("user", JSON.stringify(formData));
       router.push("/quiz");
